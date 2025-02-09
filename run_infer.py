@@ -7,6 +7,7 @@ import argparse
 from enum import IntEnum
 
 class Views(IntEnum):
+    TWO = 2
     THREE = 3
     SIX = 6
     TWELVE = 12
@@ -47,7 +48,7 @@ def run_process(cmd, log_file=None, show_output=False):
         return False
     return True
 
-def process_scene(input_path, output_dir, n_views=Views.THREE, iterations=1000):
+def process_scene(input_path, output_dir, n_views=Views.TWO, iterations=1000):
     input_path = Path(input_path)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -61,7 +62,7 @@ def process_scene(input_path, output_dir, n_views=Views.THREE, iterations=1000):
         "python", "-W", "ignore", "init_geo.py",
         "-s", str(input_path),
         "-m", str(output_dir),
-        "--n_views", str(n_views),
+        "--n_views", str(n_views.value),
         "--focal_avg",
         "--co_vis_dsp",
         "--conf_aware_ranking",
@@ -77,7 +78,7 @@ def process_scene(input_path, output_dir, n_views=Views.THREE, iterations=1000):
         "-s", str(input_path),
         "-m", str(output_dir),
         "-r", "1",
-        "--n_views", str(n_views),
+        "--n_views", str(n_views.value),
         "--iterations", str(iterations),
         "--pp_optimizer",
         "--optim_pose"
@@ -92,7 +93,7 @@ def process_scene(input_path, output_dir, n_views=Views.THREE, iterations=1000):
         "-s", str(input_path),
         "-m", str(output_dir),
         "-r", "1",
-        "--n_views", str(n_views),
+        "--n_views", str(n_views.value),
         "--iterations", str(iterations),
         "--infer_video"
     ]
@@ -120,8 +121,8 @@ def main():
     parser = argparse.ArgumentParser(description='Run InstantSplat processing on a single scene')
     parser.add_argument('input_path', help='Path to input scene directory containing images')
     parser.add_argument('output_dir', help='Output directory for results')
-    parser.add_argument('--n_views', type=valid_views, default=Views.THREE, 
-                       help='Number of views (must be 3, 6, or 12)')
+    parser.add_argument('--n_views', type=valid_views, default=Views.TWO, 
+                       help='Number of views (must be 2, 3, 6, or 12)')
     parser.add_argument('--iterations', type=int, default=1000, 
                        help='Number of training iterations (default: 1000)')
     args = parser.parse_args()
